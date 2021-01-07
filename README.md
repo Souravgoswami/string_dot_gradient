@@ -1,6 +1,8 @@
 # StringDotGradient
 A very small extension to add gradient method to Strings on Linux terminals. But it can break in TTYs.
 
+![Preview](https://github.com/Souravgoswami/string_dot_gradient/blob/master/images/preview.jpg)
+
 ## Installation
 Add this line to your application's Gemfile:
 
