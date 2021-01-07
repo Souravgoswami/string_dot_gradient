@@ -90,14 +90,9 @@ class String
 				r, g, b = hex_to_rgb(flatten_arg[0])
 				r2, g2, b2 = hex_to_rgb(flatten_arg[1])
 			end
-		#	colours.rotate! if rotate
 		end
 
-		if block_given
-			nil
-		else
-			temp
-		end
+		block_given ? nil : temp
 	end
 
 	private
