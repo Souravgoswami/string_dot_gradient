@@ -42,6 +42,12 @@ irb(main):003:0> 'abcdefgh'.gradient('ff5', '55f')
 => "\e[38;2;223;223;116ma\e[38;2;191;191;148mb\e[38;2;159;159;180mc\e[38;2;127;127;212md\e[38;2;95;95;244me\e[38;2;63;63;255mf\e[38;2;31;31;255mg\e[38;2;0;0;255mh\e[0m"
 ```
 
+You can also pass any arbitrary colours for multilined string, and get the colours rotate smoothly:
+
+```
+puts "Hello 🐵\nI am using string_dot_gradient!\nLove this gem!".gradient('f55', '55f', '3eb', 'f5f')
+```
+
 The gradient can be anything, but it has to be a hex colour. Sample colours can be:
 
 #### Colours
