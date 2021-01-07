@@ -2,10 +2,10 @@
 require_relative "lib/string_dot_gradient/version"
 
 Gem::Specification.new do |s|
-	s.name          = "string_dot_gradient"
-	s.version       = StringDotGradient::VERSION
-	s.authors       = ["Sourav Goswami"]
-	s.email         = ["souravgoswami@protonmail.com"]
+	s.name = "string_dot_gradient"
+	s.version = StringDotGradient::VERSION
+	s.authors = ["Sourav Goswami"]
+	s.email = ["souravgoswami@protonmail.com"]
 	s.summary = "An itty-bitty extension that adds gradient method to String class, for Linux terminals"
 	s.description = s.summary
 	s.homepage = "https://github.com/Souravgoswami/string_dot_gradient"
