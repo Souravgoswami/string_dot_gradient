@@ -32,13 +32,13 @@ class String
 	def gradient(*arg_colours, bg: false)
 		colours, line_length = [], -1
 		temp = ''
-		flatten_arg = arg_colours.flatten
+		all_rgbs = arg_colours.flatten.map(&method(:hex_to_rgb))
 
 		block_given = block_given?
 
-		r, g, b = hex_to_rgb(flatten_arg[0])
-		r2, g2, b2 = hex_to_rgb(flatten_arg[1])
-		rotate = flatten_arg.length > 2
+		r, g, b = all_rgbs[0]
+		r2, g2, b2 = all_rgbs[1]
+		rotate = all_rgbs.length > 2
 
 		init = bg ? 48 : 38
 
@@ -86,9 +86,9 @@ class String
 			end
 
 			if rotate
-				flatten_arg.rotate!
-				r, g, b = hex_to_rgb(flatten_arg[0])
-				r2, g2, b2 = hex_to_rgb(flatten_arg[1])
+				all_rgbs.rotate!
+				r, g, b = all_rgbs[0]
+				r2, g2, b2 = all_rgbs[1]
 			end
 		end
 
