@@ -1,4 +1,34 @@
 class String
+	##
+	# = gradient(*arg_colours, bg: false)    # => string or nil
+	#
+	# Prettifies your string by adding gradient colours
+	#
+	# This method accept a lot of colours. For example:
+	#
+	# 1. puts "Hello".gradient('#f55', '#55f')
+	# This will add #f55 (red) to #55f (blue) gradient colours to your texts.
+	#
+	# 2. puts "Hello\nWorld".gradient('#f55', '#55f')
+	# This will add #f55 (red) to #55f (blue) gradient colours to your texts, spanning multiple lines.
+	#
+	# 3. puts "Hello\nWorld!\nColours\nare\nrotated here".gradient('f55','55f', '3eb' 'ff5')
+	# This will add #ff5555 (red) to #5555ff (blue) gradient colours to the first line,
+	# 5555ff to 33eebb colour to the 2nd line,
+	# 33eebb to ffff55 to the third line
+	# And then back to ffff55 to ff5555 to the fourth line,
+	# And it will continue to rotate between these colours.
+	#
+	# To stop rotating, just don't give more than two arguments to this method.
+	#
+	# Passing blocks is also optional, and is handy for animating text. For example:
+	#    "Hello\nWorld!\nColours\nare\nrotated here".gradient('f55','55f', '3eb' 'ff5', bg:true) { |x| print x ; sleep 0.05 }
+	#
+	# This will pass the values to the block itself, and will draw the colourful text slowly.
+	# Passing block will return nil from the method because the values will be passed to the block variable instead.
+	#
+	# Adding the option bg will change the background colour, but will keep the foreground colour
+	# defined in the terminal settings.
 	def gradient(*arg_colours, bg: false)
 		colours, line_length = [], -1
 		temp = ''
