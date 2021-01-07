@@ -32,7 +32,12 @@ class String
 	def gradient(*arg_colours, bg: false)
 		colours, line_length = [], -1
 		temp = ''
-		all_rgbs = arg_colours.flatten.map(&method(:hex_to_rgb))
+		flatten_colours = arg_colours.flatten
+
+		raise ArgumentError, "Wrong numeber of colours (given #{flatten_colours.length}, expected minimum 2)" if flatten_colours.length < 2
+		raise ArgumentError, "Given argument for colour is neither a String nor an Integer" if flatten_colours.any? { |x| !(x.is_a?(String) || x.is_a?(Integer)) }
+
+		all_rgbs = flatten_colours.map!(&method(:hex_to_rgb))
 
 		block_given = block_given?
 
@@ -97,10 +102,11 @@ class String
 
 	private
 	def hex_to_rgb(hex)
-		colour = +hex.dup.to_s
+		# Duplicate colour, even if colour is nil
+		colour = hex && hex.dup.to_s || ''
 		colour.strip!
 		colour.downcase!
-		colour[0] = ''.freeze if colour.start_with?(?#.freeze)
+		colour[0] = ''.freeze if colour[0] == ?#.freeze
 
 		# out of range
 		oor = colour.scan(/[^a-f0-9]/)
@@ -114,12 +120,14 @@ class String
 			raise ArgumentError
 		end
 
-		if colour.length == 3
+		clen = colour.length
+		if clen == 3
 			colour.chars.map { |x| x.<<(x).to_i(16) }
-		elsif colour.length == 6
+		elsif clen == 6
 			colour.chars.each_slice(2).map { |x| x.join.to_i(16) }
 		else
-			raise ArgumentError, "Invalid Hex Colour ##{colour}"
+			sli = clen > 6 ? 'too long' : clen < 3 ? 'too short' : 'invalid'
+			raise ArgumentError, "Invalid Hex Colour ##{colour} (length #{sli})"
 		end
 	end
 end
