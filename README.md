@@ -1,5 +1,5 @@
 # StringDotGradient
-A very small extension to add gradient method to Strings on Linux terminals. But it can break in TTYs.
+An itty-bitty extension to add gradient method to Strings on Linux terminals. But it can break in TTYs.
 
 ![Preview](https://github.com/Souravgoswami/string_dot_gradient/blob/master/images/preview.jpg)
 
@@ -24,7 +24,7 @@ $ gem install string_dot_gradient
 
 ## Usage
 
-With this gem installed, you can require 'string_dot_gradient' and run this on any string
+With this gem installed, you can require 'string_dot_gradient' and run this on any string:
 
 ```
 irb
@@ -44,12 +44,39 @@ irb(main):003:0> 'abcdefgh'.gradient('ff5', '55f')
 
 The gradient can be anything, but it has to be a hex colour. Sample colours can be:
 
+#### Colours
+
 1. #f55
 2. #ff5555
 3. f55
 4. #ff5555
 
 Any bad colour that's out of hex range, will raise ArgumentError.
+
+#### Passing Blocks
+Sometimes it can be time-consuming for a very big string. Also, this could consume a lot of memory.
+Just take a look at the return value of "abcdefgh" above, you know it has a lot of extra characters!
+
+To prevent creating a new string, and yield whatever is getting processed, use a block.
+
+You can use printf and whatnot in that block. For example:
+
+```
+$ irb
+irb(main):001:0> require 'string_dot_gradient'
+=> true
+
+irb(main):002:0> "Hello\nWorld".gradient('#f55', '#55f') { |x| print x }
+Hello
+World=> nil
+
+irb(main):003:0> "Hello\nWorld".gradient('#f55', '#55f') { }
+=> nil
+
+```
+
+As you can see, it returns nil, but the value of the string is yielded to the block variable instead.
+This makes it consume way lesser memory.
 
 ## Development
 
@@ -62,4 +89,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Sourav
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The gem is available as open-source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
