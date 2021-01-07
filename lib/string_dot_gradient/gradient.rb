@@ -1,10 +1,15 @@
 class String
-	def gradient(colour_start, colour_stop, bg: false, rotate: false)
+	def gradient(*arg_colours, bg: false)
 		colours, line_length = [], -1
 		temp = ''
+		flatten_arg = arg_colours.flatten
 
-		r, g, b = hex_to_rgb(colour_start)
-		r2, g2, b2 = hex_to_rgb(colour_stop)
+		block_given = block_given?
+
+		r, g, b = hex_to_rgb(flatten_arg[0])
+		r2, g2, b2 = hex_to_rgb(flatten_arg[1])
+		rotate = flatten_arg.length > 2
+
 		init = bg ? 48 : 38
 
 		each_line do |c|
@@ -15,7 +20,7 @@ class String
 			g_meth = g == g2 ? :itself : g2 > g ? [:+, g2.fdiv(n)] : [:-, g.fdiv(n)]
 			b_meth = b == b2 ? :itself : b2 > b ? [:+, b2.fdiv(n)] : [:-, b.fdiv(n)]
 
-			if line_length != n
+			if line_length != n || rotate
 				line_length = n
 				colours.clear
 
@@ -35,21 +40,39 @@ class String
 
 			i = -1
 			while (i += 1) < n
-				temp.concat(
-					"\e[#{init};2;#{colours[i][0]};#{colours[i][1]};#{colours[i][2]}m#{c[i]}"
-				)
+				if block_given
+					yield "\e[#{init};2;#{colours[i][0]};#{colours[i][1]};#{colours[i][2]}m#{c[i]}"
+				else
+					temp.concat(
+						"\e[#{init};2;#{colours[i][0]};#{colours[i][1]};#{colours[i][2]}m#{c[i]}"
+					)
+				end
 			end
-			colours.rotate! if rotate
 
-			temp << "\e[0m".freeze
+			if block_given
+				yield "\e[0m".freeze
+			else
+				temp << "\e[0m".freeze
+			end
+
+			if rotate
+				flatten_arg.rotate!
+				r, g, b = hex_to_rgb(flatten_arg[0])
+				r2, g2, b2 = hex_to_rgb(flatten_arg[1])
+			end
+		#	colours.rotate! if rotate
 		end
 
-		temp
+		if block_given
+			nil
+		else
+			temp
+		end
 	end
 
 	private
 	def hex_to_rgb(hex)
-		colour = hex.dup.to_s
+		colour = +hex.dup.to_s
 		colour.strip!
 		colour.downcase!
 		colour[0] = ''.freeze if colour.start_with?(?#.freeze)
