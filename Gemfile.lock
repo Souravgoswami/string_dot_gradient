@@ -14,7 +14,7 @@ GEM
       io-console (~> 0.5)
 
 PLATFORMS
-  x86_64-linux
+  ruby
 
 DEPENDENCIES
   irb
@@ -22,4 +22,4 @@ DEPENDENCIES
   string_dot_gradient!
 
 BUNDLED WITH
-   2.2.4
+   2.1.4
