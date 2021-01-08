@@ -48,14 +48,14 @@ You can also pass any arbitrary colours for multilined string, and get the colou
 puts "Hello 🐵\nI am using string_dot_gradient!\nLove this gem!".gradient('f55', '55f', '3eb', 'f5f')
 ```
 
-The gradient can be anything, but it has to be a hex colour. Sample colours can be:
-
 #### Colours
+
+The gradient can be any hex colour. Sample colours can be:
 
 1. #f55
 2. #ff5555
 3. f55
-4. #ff5555
+4. ff5555
 
 Any bad colour that's out of hex range, will raise ArgumentError.
 
