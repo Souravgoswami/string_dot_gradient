@@ -88,15 +88,19 @@ This makes it consume way lesser memory.
 You can animate your text using blocks!
 
 Here's an example:
+
 ![Preview](https://github.com/Souravgoswami/string_dot_gradient/blob/master/images/preview.gif)
 
 Code used:
 
 ```
-%w(io/console string_dot_gradient).each(&method(:require))
+require 'io/console'
+require 'string_dot_gradient'
 
-w, i = STDOUT.winsize[1] - 4, -1
-story = <<~EOF.gsub(?\n, ?\s)
+w = STDOUT.winsize[1] - 4
+i = -1
+
+story = <<~'EOF'.gsub(?\n, ?\s)
 	Four cows lived in a forest near a meadow. They were good friends and did
 	everything together. They grazed together and stayed together, because of
 	which no tigers or lions were able to kill them for food. But one day, the friends
@@ -105,15 +109,27 @@ story = <<~EOF.gsub(?\n, ?\s)
 	the bushes and surprised the cows and killed them all, one by one.
 EOF
 
-story.chars.each { |x|
-	x.concat(?\n) && i = 0 if (i += 1) > w || (i > w - 4 && x == ?\s)
-}.join.gradient('f55', '55f', '3eb', 'fa0', 'ff0', 'ff50a6') { |x| print(x) || sleep(0.01) }
+# Adding new lines to the story based on the terminal size
+story_with_newline = story.chars.each { |x|
+	i += 1
+
+	# Check if the w-th character exceeds terminal size or not
+	# If it exceeds the size, add a new line in the story
+
+	if i > w || i > w - 6 && x == ?\s.freeze
+		x.rstrip!
+		x << ?\n.freeze
+		i = 0
+	end
+}.join
+
+story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0') { |x|
+	print x
+	sleep 0.01
+}
 
 puts
 ```
-
-[ code meant to be short, didn't focus too much on readability here,
-but you are your own hero, you can use this gem however you like ]
 
 [ Story from: https://moralstories.top/read/the-cows-and-the-tiger ]
 
