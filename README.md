@@ -84,6 +84,39 @@ irb(main):003:0> "Hello\nWorld".gradient('#f55', '#55f') { }
 As you can see, it returns nil, but the value of the string is yielded to the block variable instead.
 This makes it consume way lesser memory.
 
+## Animation
+You can animate your text using blocks!
+
+Here's an example:
+![Preview](https://github.com/Souravgoswami/string_dot_gradient/blob/master/images/preview.gif)
+
+Code used:
+
+```
+%w(io/console string_dot_gradient).each(&method(:require))
+
+w, i = STDOUT.winsize[1] - 4, -1
+story = <<~EOF.gsub(?\n, ?\s)
+	Four cows lived in a forest near a meadow. They were good friends and did
+	everything together. They grazed together and stayed together, because of
+	which no tigers or lions were able to kill them for food. But one day, the friends
+	fought and each cow went to graze in a different direction. A tiger and a lion saw
+	this and decided that it was the perfect opportunity to kill the cows. They hid in
+	the bushes and surprised the cows and killed them all, one by one.
+EOF
+
+story.chars.each { |x|
+	x.concat(?\n) && i = 0 if i > w || ((i += 1) > w - 4 && x == ?\s)
+}.join.gradient('f55', '55f', '3eb', 'fa0', 'ff0', 'ff50a6') { |x| print(x) || sleep(0.01) }
+
+puts
+```
+
+[ code meant to be short, didn't focus too much on readability here,
+but you are your own hero, you can use this gem however you like ]
+
+[ Story from: https://moralstories.top/read/the-cows-and-the-tiger ]
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies.
