@@ -30,6 +30,7 @@ With this gem installed, you can require 'string_dot_gradient' and run this on a
 irb
 irb(main):001:0> require 'string_dot_gradient'
 => true
+
 irb(main):002:0> puts 'abcdefgh'.gradient('ff5', '55f')
 abcdefgh
 => nil
@@ -132,6 +133,15 @@ puts
 ```
 
 [ Story from: https://moralstories.top/read/the-cows-and-the-tiger ]
+
+## Excluding Spaces and tabs
+A string can contain spaces or tabs, to exclude them, use the exclude_spaces optionl.
+Set it to true or false. A truthy or falsey value will also work, but it's not recommended.
+
++ if exclude_spaces is set to true, it will not waste colours on spaces and tabs
++ if exclude_spaces is set to false, it will waste colours on spaces and tabs
+
+![Preview](https://github.com/Souravgoswami/string_dot_gradient/blob/master/images/exclude_spaces.jpg)
 
 ## Development
 
