@@ -1,8 +1,8 @@
 class String
 	##
-	# = gradient(*arg_colours, bg: false)    # => string or nil
+	# = gradient(*arg_colours, bg: false, exclude_spaces: true)    # => string or nil
 	#
-	# Prettifies your string by adding gradient colours
+	# Prettifies your string by adding gradient colours.
 	#
 	# This method accept a lot of colours. For example:
 	#
@@ -29,7 +29,18 @@ class String
 	#
 	# Adding the option bg will change the background colour, but will keep the foreground colour
 	# defined in the terminal settings.
-	def gradient(*arg_colours, bg: false)
+	#
+	# The option exclude_spaces, is expected to set either true or false.
+	# By default it's set to true.
+	# Enabling this option will not waste colours on white-spaces.
+	# White spaces only include: \s, \t
+	#
+	# Please do note that \u0000 and \r in the middle of the string will not be
+	# counted as a white space, but as a character instead.
+	# This is because \r wipes out the previous characters, and using \u0000 in
+	# a string is uncommon, and developers are requested to delete
+	# \u0000 from string if such situations arise.
+	def gradient(*arg_colours, bg: false, exclude_spaces: true)
 		colours, line_length = [], -1
 		temp = ''
 		flatten_colours = arg_colours.flatten
@@ -65,9 +76,24 @@ class String
 
 				i = -1
 				while (i += 1) < n
-					_r = _r.send(*r_meth) unless _r > r_max || _r < r_min
-					_g = _g.send(*g_meth) unless _g > g_max || _g < g_min
-					_b = _b.send(*b_meth) unless _b > b_max || _b < b_min
+					if exclude_spaces
+						_c = c[i]
+
+						if !(_c == ?\s.freeze || _c == ?\t.freeze)
+							_r = _r.send(*r_meth) unless _r > r_max || _r < r_min
+							_g = _g.send(*g_meth) unless _g > g_max || _g < g_min
+							_b = _b.send(*b_meth) unless _b > b_max || _b < b_min
+						end
+					else
+						# We also have duplication above,
+						# But we are not going to remove this code unless
+						# we find some efficient solution. Using a proc or method
+						# for setting these values and calling that is a way
+						# to make code slower.
+						_r = _r.send(*r_meth) unless _r > r_max || _r < r_min
+						_g = _g.send(*g_meth) unless _g > g_max || _g < g_min
+						_b = _b.send(*b_meth) unless _b > b_max || _b < b_min
+					end
 
 					r_to_i = _r.to_i
 					g_to_i = _g.to_i
