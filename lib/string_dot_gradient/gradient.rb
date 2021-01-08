@@ -51,6 +51,10 @@ class String
 			_r, _g, _b = r, g, b
 			n = c.length
 
+			r_max, r_min = r > r2 ? [r, r2] : [r2, r]
+			g_max, g_min = g > g2 ? [g, g2] : [g2, g]
+			b_max, b_min = b > b2 ? [b, b2] : [b2, b]
+
 			r_meth = r == r2 ? :itself : r2 > r ? [:+, r2.fdiv(n)] : [:-, r.fdiv(n)]
 			g_meth = g == g2 ? :itself : g2 > g ? [:+, g2.fdiv(n)] : [:-, g.fdiv(n)]
 			b_meth = b == b2 ? :itself : b2 > b ? [:+, b2.fdiv(n)] : [:-, b.fdiv(n)]
@@ -61,14 +65,14 @@ class String
 
 				i = -1
 				while (i += 1) < n
-					_r = _r.send(*r_meth)
-					_g = _g.send(*g_meth)
-					_b = _b.send(*b_meth)
+					_r = _r.send(*r_meth) unless _r > r_max || _r < r_min
+					_g = _g.send(*g_meth) unless _g > g_max || _g < g_min
+					_b = _b.send(*b_meth) unless _b > b_max || _b < b_min
 
 					colours << [
-						(_r < 0 ? 0 : _r > 255 ? 255 : _r.to_i),
-						(_g < 0 ? 0 : _g > 255 ? 255 : _g.to_i),
-						_b < 0 ? 0 : _b > 255 ? 255 : _b.to_i
+						_r.to_i.clamp(0, 255),
+						_g.to_i.clamp(0, 255),
+						_b.to_i.clamp(0, 255)
 					]
 				end
 			end
