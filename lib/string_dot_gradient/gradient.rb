@@ -69,10 +69,14 @@ class String
 					_g = _g.send(*g_meth) unless _g > g_max || _g < g_min
 					_b = _b.send(*b_meth) unless _b > b_max || _b < b_min
 
+					r_to_i = _r.to_i
+					g_to_i = _g.to_i
+					b_to_i = _b.to_i
+
 					colours << [
-						_r.to_i.clamp(0, 255),
-						_g.to_i.clamp(0, 255),
-						_b.to_i.clamp(0, 255)
+						r_to_i < 0 ? 0 : r_to_i > 255 ? 255 : r_to_i,
+						g_to_i < 0 ? 0 : g_to_i > 255 ? 255 : g_to_i,
+						b_to_i < 0 ? 0 : b_to_i > 255 ? 255 : b_to_i,
 					]
 				end
 			end
