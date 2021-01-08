@@ -106,7 +106,7 @@ story = <<~EOF.gsub(?\n, ?\s)
 EOF
 
 story.chars.each { |x|
-	x.concat(?\n) && i = 0 if i > w || ((i += 1) > w - 4 && x == ?\s)
+	x.concat(?\n) && i = 0 if (i += 1) > w || (i > w - 4 && x == ?\s)
 }.join.gradient('f55', '55f', '3eb', 'fa0', 'ff0', 'ff50a6') { |x| print(x) || sleep(0.01) }
 
 puts
