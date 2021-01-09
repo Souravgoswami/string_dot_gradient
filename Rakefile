@@ -9,4 +9,9 @@ end
 
 task :test do
 	ruby 'test/test.rb'
+	ruby 'test/story.rb'
+end
+
+task :story do
+	ruby 'test/story.rb'
 end
