@@ -61,10 +61,6 @@ class String
 			_r, _g, _b = r, g, b
 			n = c.length
 
-			nr_equal = r != r2
-			ng_equal = g != g2
-			nb_equal = b != b2
-
 			r_op = r_val = r_max = r_min = nil
 			g_op = g_val = g_max = g_min = nil
 			b_op = b_val = b_max = b_min = nil
@@ -73,7 +69,7 @@ class String
 			g_comp_op = g_comp_val = nil
 			b_comp_op = b_comp_val = nil
 
-			if nr_equal && r2 > r
+			if r2 > r
 				r_op, r_val, r_max, r_min = :+, r2.fdiv(n), r2, r
 				r_comp_op, r_comp_val = :<=, r_max
 			elsif r2 < r
@@ -81,7 +77,7 @@ class String
 				r_comp_op, r_comp_val = :>=, r_min
 			end
 
-			if ng_equal && g2 > g
+			if g2 > g
 				g_op, g_val, g_max, g_min = :+, g2.fdiv(n), g2, g
 				g_comp_op, g_comp_val = :<=, g_max
 			elsif g2 < g
@@ -89,7 +85,7 @@ class String
 				g_comp_op, g_comp_val = :>=, g_min
 			end
 
-			if nb_equal && b2 > b
+			if b2 > b
 				b_op, b_val, b_max, b_min = :+, b2.fdiv(n), b2, b
 				b_comp_op, b_comp_val = :<=, b_max
 			elsif b2 < b

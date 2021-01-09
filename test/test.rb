@@ -6,8 +6,6 @@ require "string_dot_gradient"
 words = IO.readlines(File.join(__dir__, 'words')).join
 reliable_match = IO.read(File.join(__dir__, 'reliable_match.data'), encoding: 'UTF-8').strip
 
-# puts reliable_match == words.gradient('55f', '#3eb', '#55f', 'FEC40E', 'E93884').strip.inspect
-
 t = Time.now
 gradients = words.gradient(
 	'55f', '#3eb', '#55f', 'FEC40E', 'E93884', '55f', '55f', '000', '555'
