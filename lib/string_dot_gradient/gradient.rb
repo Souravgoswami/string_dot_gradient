@@ -152,15 +152,15 @@ class String
 
 			if block_given
 				if !c.empty?
-					yield(chomped ? "\e[0m\n" : "\e[0m")
+					yield(chomped ? "\e[0m\n".freeze : "\e[0m".freeze)
 				elsif chomped && c.empty?
-					yield("\n")
+					yield(?\n.freeze)
 				end
 			else
 				if !c.empty?
-					temp.concat(chomped ? "\e[0m\n" : "\e[0m")
+					temp.concat(chomped ? "\e[0m\n".freeze : "\e[0m".freeze)
 				elsif chomped && c.empty?
-					temp.concat("\n")
+					temp.concat(?\n.freeze)
 				end
 			end
 
