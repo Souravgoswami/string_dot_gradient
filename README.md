@@ -1,5 +1,6 @@
-# StringDotGradient
-An itty-bitty extension to add gradient method to Strings on Linux terminals. But it can break in TTYs.
+# StringDotGradient [![Gem Version](https://badge.fury.io/rb/string_dot_gradient.svg)](https://rubygems.org/gems/string_dot_gradient) ![Test](https://github.com/souravgoswami/string_dot_gradient/workflows/StringDotGradient/badge.svg)
+
+An itty-bitty extension that adds gradient method to String class that supports any hex colour, for Linux | Unix terminals only
 
 ![Preview](https://github.com/Souravgoswami/string_dot_gradient/blob/master/images/preview.jpg)
 
