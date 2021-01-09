@@ -59,8 +59,10 @@ class String
 
 		each_line do |c|
 			_r, _g, _b = r, g, b
+			chomped = !!c.chomp!(''.freeze)
+
 			n = c.length
-			n_variable = exclude_spaces ? c.dup.delete("\t\s".freeze).length : n
+			n_variable = exclude_spaces ? c.delete("\t\s".freeze).length : n
 
 			r_op = r_val = r_max = r_min = nil
 			g_op = g_val = g_max = g_min = nil
@@ -93,6 +95,12 @@ class String
 				b_op, b_val, b_max, b_min = :-, b.fdiv(n_variable), b, b2
 				b_comp_op, b_comp_val = :>=, b_min
 			end
+
+			# To avoid the value getting adding | subtracted from the initial character
+			# Note that duplication is fine if we don't get a little bit performance loss
+			_r = _r.send(r_op, r_val * -1) if r_comp_op && _r.send(r_comp_op, r_comp_val)
+			_g = _g.send(g_op, g_val * -1) if g_comp_op && _g.send(g_comp_op, g_comp_val)
+			_b = _b.send(b_op, b_val * -1) if b_comp_op && _b.send(b_comp_op, b_comp_val)
 
 			if line_length != n || rotate
 				line_length = n
@@ -143,9 +151,17 @@ class String
 			end
 
 			if block_given
-				yield "\e[0m".freeze
+				if !c.empty?
+					yield(chomped ? "\e[0m\n" : "\e[0m")
+				elsif chomped && c.empty?
+					yield("\n")
+				end
 			else
-				temp << "\e[0m".freeze
+				if !c.empty?
+					temp.concat(chomped ? "\e[0m\n" : "\e[0m")
+				elsif chomped && c.empty?
+					temp.concat("\n")
+				end
 			end
 
 			if rotate
