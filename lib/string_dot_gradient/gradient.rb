@@ -49,7 +49,6 @@ class String
 		raise ArgumentError, "Given argument for colour is neither a String nor an Integer" if flatten_colours.any? { |x| !(x.is_a?(String) || x.is_a?(Integer)) }
 
 		all_rgbs = flatten_colours.map!(&method(:hex_to_rgb))
-
 		block_given = block_given?
 
 		r, g, b = all_rgbs[0]
@@ -62,13 +61,41 @@ class String
 			_r, _g, _b = r, g, b
 			n = c.length
 
-			r_max, r_min = r > r2 ? [r, r2] : [r2, r]
-			g_max, g_min = g > g2 ? [g, g2] : [g2, g]
-			b_max, b_min = b > b2 ? [b, b2] : [b2, b]
+			nr_equal = r != r2
+			ng_equal = g != g2
+			nb_equal = b != b2
 
-			r_meth = r == r2 ? :itself : r2 > r ? [:+, r2.fdiv(n)] : [:-, r.fdiv(n)]
-			g_meth = g == g2 ? :itself : g2 > g ? [:+, g2.fdiv(n)] : [:-, g.fdiv(n)]
-			b_meth = b == b2 ? :itself : b2 > b ? [:+, b2.fdiv(n)] : [:-, b.fdiv(n)]
+			r_op = r_val = r_max = r_min = nil
+			g_op = g_val = g_max = g_min = nil
+			b_op = b_val = b_max = b_min = nil
+
+			r_comp_op = r_comp_val = nil
+			g_comp_op = g_comp_val = nil
+			b_comp_op = b_comp_val = nil
+
+			if nr_equal && r2 > r
+				r_op, r_val, r_max, r_min = :+, r2.fdiv(n), r2, r
+				r_comp_op, r_comp_val = :<=, r_max
+			else
+				r_op, r_val, r_max, r_min = :-, r.fdiv(n), r, r2
+				r_comp_op, r_comp_val = :>=, r_min
+			end
+
+			if ng_equal && g2 > g
+				g_op, g_val, g_max, g_min = :+, g2.fdiv(n), g2, g
+				g_comp_op, g_comp_val = :<=, g_max
+			else
+				g_op, g_val, g_max, g_min = :-, g.fdiv(n), g, g2
+				g_comp_op, g_comp_val = :>=, g_min
+			end
+
+			if nb_equal && b2 > b
+				b_op, b_val, b_max, b_min = :+, b2.fdiv(n), b2, b
+				b_comp_op, b_comp_val = :<=, b_max
+			else
+				b_op, b_val, b_max, b_min = :-, b.fdiv(n), b, b2
+				b_comp_op, b_comp_val = :>=, b_min
+			end
 
 			if line_length != n || rotate
 				line_length = n
@@ -80,9 +107,9 @@ class String
 						_c = c[i]
 
 						if !(_c == ?\s.freeze || _c == ?\t.freeze)
-							_r = _r.send(*r_meth) unless _r > r_max || _r < r_min
-							_g = _g.send(*g_meth) unless _g > g_max || _g < g_min
-							_b = _b.send(*b_meth) unless _b > b_max || _b < b_min
+							_r = _r.send(r_op, r_val) if r_comp_op && _r.send(r_comp_op, r_comp_val)
+							_g = _g.send(g_op, g_val) if g_comp_op && _g.send(g_comp_op, g_comp_val)
+							_b = _b.send(b_op, b_val) if b_comp_op && _b.send(b_comp_op, b_comp_val)
 						end
 					else
 						# We also have duplication above,
@@ -90,9 +117,9 @@ class String
 						# we find some efficient solution. Using a proc or method
 						# for setting these values and calling that is a way
 						# to make code slower.
-						_r = _r.send(*r_meth) unless _r > r_max || _r < r_min
-						_g = _g.send(*g_meth) unless _g > g_max || _g < g_min
-						_b = _b.send(*b_meth) unless _b > b_max || _b < b_min
+						_r = _r.send(r_op, r_val) if r_comp_op && _r.send(r_comp_op, r_comp_val)
+						_g = _g.send(g_op, g_val) if g_comp_op && _g.send(g_comp_op, g_comp_val)
+						_b = _b.send(b_op, b_val) if b_comp_op && _b.send(b_comp_op, b_comp_val)
 					end
 
 					r_to_i = _r.to_i
@@ -160,7 +187,7 @@ class String
 		elsif clen == 6
 			colour.chars.each_slice(2).map { |x| x.join.to_i(16) }
 		else
-			sli = clen > 6 ? 'too long' : clen < 3 ? 'too short' : 'invalid'
+			sli = clen > 6 ? 'too long'.freeze : clen < 3 ? 'too short'.freeze : 'invalid'.freeze
 			raise ArgumentError, "Invalid Hex Colour ##{colour} (length #{sli})"
 		end
 	end
