@@ -41,7 +41,6 @@ class String
 	# a string is uncommon, and developers are requested to delete
 	# \u0000 from string if such situations arise.
 	def gradient(*arg_colours, bg: false, exclude_spaces: true)
-		colours, line_length = [], -1
 		temp = ''
 		flatten_colours = arg_colours.flatten
 
@@ -61,8 +60,9 @@ class String
 			_r, _g, _b = r, g, b
 			chomped = !!c.chomp!(''.freeze)
 
-			n = c.length
-			n_variable = exclude_spaces ? c.delete("\t\s".freeze).length : n
+			len = c.length
+			n_variable = exclude_spaces ? c.delete("\t\s".freeze).length : len
+			n_variable = 1 if n_variable == 0
 
 			r_op = r_val = r_max = r_min = nil
 			g_op = g_val = g_max = g_min = nil
@@ -97,71 +97,47 @@ class String
 			end
 
 			# To avoid the value getting adding | subtracted from the initial character
-			# Note that duplication is fine if we don't get a little bit performance loss
 			_r = _r.send(r_op, r_val * -1) if r_comp_op && _r.send(r_comp_op, r_comp_val)
 			_g = _g.send(g_op, g_val * -1) if g_comp_op && _g.send(g_comp_op, g_comp_val)
 			_b = _b.send(b_op, b_val * -1) if b_comp_op && _b.send(b_comp_op, b_comp_val)
 
-			if line_length != n || rotate
-				line_length = n
-				colours.clear
+			i = -1
+			while (i += 1) < len
+				_c = c[i]
 
-				i = -1
-				while (i += 1) < n
-					if exclude_spaces
-						_c = c[i]
+				if !exclude_spaces || (exclude_spaces && !(_c == ?\s.freeze || _c == ?\t.freeze))
+					_r = _r.send(r_op, r_val) if r_comp_op && _r.send(r_comp_op, r_comp_val)
+					_g = _g.send(g_op, g_val) if g_comp_op && _g.send(g_comp_op, g_comp_val)
+					_b = _b.send(b_op, b_val) if b_comp_op && _b.send(b_comp_op, b_comp_val)
+				end
 
-						if !(_c == ?\s.freeze || _c == ?\t.freeze)
-							_r = _r.send(r_op, r_val) if r_comp_op && _r.send(r_comp_op, r_comp_val)
-							_g = _g.send(g_op, g_val) if g_comp_op && _g.send(g_comp_op, g_comp_val)
-							_b = _b.send(b_op, b_val) if b_comp_op && _b.send(b_comp_op, b_comp_val)
-						end
-					else
-						# We also have duplication above,
-						# But we are not going to remove this code unless
-						# we find some efficient solution. Using a proc or method
-						# for setting these values and calling that is a way
-						# to make code slower.
-						_r = _r.send(r_op, r_val) if r_comp_op && _r.send(r_comp_op, r_comp_val)
-						_g = _g.send(g_op, g_val) if g_comp_op && _g.send(g_comp_op, g_comp_val)
-						_b = _b.send(b_op, b_val) if b_comp_op && _b.send(b_comp_op, b_comp_val)
-					end
+				r_to_i = _r.to_i
+				g_to_i = _g.to_i
+				b_to_i = _b.to_i
 
-					r_to_i = _r.to_i
-					g_to_i = _g.to_i
-					b_to_i = _b.to_i
+				f_r = r_to_i < 0 ? 0 : r_to_i > 255 ? 255 : r_to_i
+				f_g = g_to_i < 0 ? 0 : g_to_i > 255 ? 255 : g_to_i
+				f_b = b_to_i < 0 ? 0 : b_to_i > 255 ? 255 : b_to_i
 
-					colours << [
-						r_to_i < 0 ? 0 : r_to_i > 255 ? 255 : r_to_i,
-						g_to_i < 0 ? 0 : g_to_i > 255 ? 255 : g_to_i,
-						b_to_i < 0 ? 0 : b_to_i > 255 ? 255 : b_to_i,
-					]
+				ret = "\e[#{init};2;#{f_r};#{f_g};#{f_b}m#{_c}"
+
+				if block_given
+					yield ret
+				else
+					temp << ret
 				end
 			end
 
-			i = -1
-			while (i += 1) < n
-				if block_given
-					yield "\e[#{init};2;#{colours[i][0]};#{colours[i][1]};#{colours[i][2]}m#{c[i]}"
-				else
-					temp.concat(
-						"\e[#{init};2;#{colours[i][0]};#{colours[i][1]};#{colours[i][2]}m#{c[i]}"
-					)
-				end
+			ret = if !c.empty?
+				chomped ? "\e[0m\n".freeze : "\e[0m".freeze
+			elsif chomped
+				?\n.freeze
 			end
 
 			if block_given
-				if !c.empty?
-					yield(chomped ? "\e[0m\n".freeze : "\e[0m".freeze)
-				elsif chomped && c.empty?
-					yield(?\n.freeze)
-				end
+				yield ret
 			else
-				if !c.empty?
-					temp.concat(chomped ? "\e[0m\n".freeze : "\e[0m".freeze)
-				elsif chomped && c.empty?
-					temp.concat(?\n.freeze)
-				end
+				temp << ret
 			end
 
 			if rotate
@@ -177,6 +153,8 @@ class String
 	private
 	def hex_to_rgb(hex)
 		# Duplicate colour, even if colour is nil
+		# This workaround is for Ruby 2.0 to Ruby 2.2
+		# Which won't allow duplicate nil.
 		colour = hex && hex.dup.to_s || ''
 		colour.strip!
 		colour.downcase!
