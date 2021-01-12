@@ -64,36 +64,36 @@ class String
 			n_variable = exclude_spaces ? c.delete("\t\s".freeze).length : len
 			n_variable = 1 if n_variable == 0
 
-			r_op = r_val = r_max = r_min = nil
-			g_op = g_val = g_max = g_min = nil
-			b_op = b_val = b_max = b_min = nil
+			r_op = r_val  = nil
+			g_op = g_val = nil
+			b_op = b_val = nil
 
 			r_comp_op = r_comp_val = nil
 			g_comp_op = g_comp_val = nil
 			b_comp_op = b_comp_val = nil
 
 			if r2 > r
-				r_op, r_val, r_max, r_min = :+, r2.fdiv(n_variable), r2, r
-				r_comp_op, r_comp_val = :<=, r_max
+				r_op, r_val = :+, r2.fdiv(n_variable)
+				r_comp_op, r_comp_val = :<=, r2
 			elsif r2 < r
-				r_op, r_val, r_max, r_min = :-, r.fdiv(n_variable), r, r2
-				r_comp_op, r_comp_val = :>=, r_min
+				r_op, r_val = :-, r.fdiv(n_variable)
+				r_comp_op, r_comp_val = :>=, r2
 			end
 
 			if g2 > g
-				g_op, g_val, g_max, g_min = :+, g2.fdiv(n_variable), g2, g
-				g_comp_op, g_comp_val = :<=, g_max
+				g_op, g_val = :+, g2.fdiv(n_variable)
+				g_comp_op, g_comp_val = :<=, g2
 			elsif g2 < g
-				g_op, g_val, g_max, g_min = :-, g.fdiv(n_variable), g, g2
-				g_comp_op, g_comp_val = :>=, g_min
+				g_op, g_val = :-, g.fdiv(n_variable)
+				g_comp_op, g_comp_val = :>=, g2
 			end
 
 			if b2 > b
-				b_op, b_val, b_max, b_min = :+, b2.fdiv(n_variable), b2, b
-				b_comp_op, b_comp_val = :<=, b_max
+				b_op, b_val = :+, b2.fdiv(n_variable)
+				b_comp_op, b_comp_val = :<=, b2
 			elsif b2 < b
-				b_op, b_val, b_max, b_min = :-, b.fdiv(n_variable), b, b2
-				b_comp_op, b_comp_val = :>=, b_min
+				b_op, b_val = :-, b.fdiv(n_variable), b, b2
+				b_comp_op, b_comp_val = :>=, b2
 			end
 
 			# To avoid the value getting adding | subtracted from the initial character
