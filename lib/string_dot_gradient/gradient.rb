@@ -50,8 +50,10 @@ class String
 		all_rgbs = flatten_colours.map!(&method(:hex_to_rgb))
 		block_given = block_given?
 
-		r, g, b = all_rgbs[0]
-		r2, g2, b2 = all_rgbs[1]
+		# r, g, b => starting r, g, b
+		# r2, g2, b2 => stopping r, g, b
+		r, g, b = *all_rgbs[0]
+		r2, g2, b2 = *all_rgbs[1]
 		rotate = all_rgbs.length > 2
 
 		init = bg ? 48 : 38
@@ -62,53 +64,45 @@ class String
 
 			len = c.length
 			n_variable = exclude_spaces ? c.delete("\t\s".freeze).length : len
-			n_variable = 1 if n_variable == 0
+			n_variable -= 1
+			n_variable = 1 if n_variable < 1
 
+			# colour operator, colour value
 			r_op = r_val  = nil
 			g_op = g_val = nil
 			b_op = b_val = nil
 
-			r_comp_op = r_comp_val = nil
-			g_comp_op = g_comp_val = nil
-			b_comp_op = b_comp_val = nil
-
 			if r2 > r
-				r_op, r_val = :+, r2.fdiv(n_variable)
-				r_comp_op, r_comp_val = :<=, r2
+				r_op, r_val = :+, r2.-(r).fdiv(n_variable)
 			elsif r2 < r
-				r_op, r_val = :-, r.fdiv(n_variable)
-				r_comp_op, r_comp_val = :>=, r2
+				r_op, r_val = :-, r.-(r2).fdiv(n_variable)
 			end
 
 			if g2 > g
-				g_op, g_val = :+, g2.fdiv(n_variable)
-				g_comp_op, g_comp_val = :<=, g2
+				g_op, g_val = :+, g2.-(g).fdiv(n_variable)
 			elsif g2 < g
-				g_op, g_val = :-, g.fdiv(n_variable)
-				g_comp_op, g_comp_val = :>=, g2
+				g_op, g_val = :-, g.-(g2).fdiv(n_variable)
 			end
 
 			if b2 > b
-				b_op, b_val = :+, b2.fdiv(n_variable)
-				b_comp_op, b_comp_val = :<=, b2
+				b_op, b_val = :+, b2.-(b).fdiv(n_variable)
 			elsif b2 < b
-				b_op, b_val = :-, b.fdiv(n_variable), b, b2
-				b_comp_op, b_comp_val = :>=, b2
+				b_op, b_val = :-, b.-(b2).fdiv(n_variable)
 			end
 
 			# To avoid the value getting adding | subtracted from the initial character
-			_r = _r.send(r_op, r_val * -1) if r_comp_op && _r.send(r_comp_op, r_comp_val)
-			_g = _g.send(g_op, g_val * -1) if g_comp_op && _g.send(g_comp_op, g_comp_val)
-			_b = _b.send(b_op, b_val * -1) if b_comp_op && _b.send(b_comp_op, b_comp_val)
+			_r = _r.send(r_op, r_val * -1) if r_op
+			_g = _g.send(g_op, g_val * -1) if g_op
+			_b = _b.send(b_op, b_val * -1) if b_op
 
 			i = -1
 			while (i += 1) < len
 				_c = c[i]
 
 				if !exclude_spaces || (exclude_spaces && !(_c == ?\s.freeze || _c == ?\t.freeze))
-					_r = _r.send(r_op, r_val) if r_comp_op && _r.send(r_comp_op, r_comp_val)
-					_g = _g.send(g_op, g_val) if g_comp_op && _g.send(g_comp_op, g_comp_val)
-					_b = _b.send(b_op, b_val) if b_comp_op && _b.send(b_comp_op, b_comp_val)
+					_r = _r.send(r_op, r_val) if r_op
+					_g = _g.send(g_op, g_val) if g_op
+					_b = _b.send(b_op, b_val) if b_op
 				end
 
 				r_to_i = _r.to_i
