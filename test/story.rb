@@ -31,6 +31,10 @@ story_with_newline = story.chars.each { |x|
 story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', &method(:print))
 puts
 
+puts ?\n * 2, story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', bold: true)
+puts ?\n * 2, story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', blink: true)
+puts ?\n * 2, story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', bold: true, blink: true)
+
 puts ?\n * 2, story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', bg: true)
 puts ?\n * 2, story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', exclude_spaces: false, bg: false)
 puts ?\n * 2, story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0')
