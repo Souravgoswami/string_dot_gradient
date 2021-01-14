@@ -1,6 +1,6 @@
 class String
 	##
-	# = gradient(*arg_colours, bg: false, exclude_spaces: true)    # => string or nil
+	# = gradient(*arg_colours, bg: false, exclude_spaces: true, bold: false, blink: false)    # => string or nil
 	#
 	# Prettifies your string by adding gradient colours.
 	#
@@ -40,7 +40,13 @@ class String
 	# This is because \r wipes out the previous characters, and using \u0000 in
 	# a string is uncommon, and developers are requested to delete
 	# \u0000 from string if such situations arise.
-	def gradient(*arg_colours, bg: false, exclude_spaces: true)
+	#
+	# The option bold makes texts bold, but it also makes the string bigger.
+	# Set bold to anything truthy or falsey, but better just go with true and false or nil
+	#
+	# The option blink makes the texts blink on supported terminals.
+	# Set blink to anything truthy or falsey, but better just go with true and false or nil
+	def gradient(*arg_colours, bg: false, exclude_spaces: true, bold: false, blink: false)
 		temp = ''
 		flatten_colours = arg_colours.flatten
 
@@ -59,6 +65,9 @@ class String
 		init = bg ? 48 : 38
 
 		each_line do |c|
+			temp << "\e[1m".freeze if bold
+			temp << "\e[5m".freeze if blink
+
 			_r, _g, _b = r, g, b
 			chomped = !!c.chomp!(''.freeze)
 
