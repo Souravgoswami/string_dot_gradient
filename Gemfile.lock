@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    string_dot_gradient (0.1.9)
+    string_dot_gradient (0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -22,4 +22,4 @@ DEPENDENCIES
   string_dot_gradient!
 
 BUNDLED WITH
-   2.1.4
+   2.2.4
