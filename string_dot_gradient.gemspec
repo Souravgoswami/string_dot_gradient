@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 	s.version = StringDotGradient::VERSION
 	s.authors = ["Sourav Goswami"]
 	s.email = ["souravgoswami@protonmail.com"]
-	s.summary = "An itty-bitty extension that adds gradient method to String class that supports any hex colour, for Linux | Unix terminals only"
+	s.summary = %(An itty-bitty extension that adds "gradient" method to String class that supports any hex colour, for Linux terminals)
 	s.description = s.summary
 	s.homepage = "https://github.com/Souravgoswami/string_dot_gradient"
 	s.license = "MIT"
