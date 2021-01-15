@@ -28,16 +28,16 @@ story_with_newline = story.chars.each { |x|
 	end
 }.join
 
+puts "\u2B22 Block"
 story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', &method(:print))
 
-puts
-puts ?\n * 2, "Bold", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', bold: true)
-puts ?\n * 2, "Blink", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', blink: true)
-puts ?\n * 2, "Underline", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', underline: true)
-puts ?\n * 2, "Double Underline", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', double_underline: true)
-puts ?\n * 2, "Overline", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', overline: true)
-puts ?\n * 2, "Italic", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', italic: true)
-puts ?\n * 2, "Strikethrough", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', strikethrough: true)
-puts ?\n * 2, "BG", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', bg: true)
-puts ?\n * 2, "Include Spaces | BG", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', exclude_spaces: false, bg: false)
-puts ?\n * 2, "Include Spaces | No BG", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0')
+puts ?\n * 2, "\u2B22 Bold", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', bold: true)
+puts ?\n * 2, "\u2B22 Blink", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', blink: true)
+puts ?\n * 2, "\u2B22 Underline", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', underline: true)
+puts ?\n * 2, "\u2B22 Double Underline", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', double_underline: true)
+puts ?\n * 2, "\u2B22 Overline", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', overline: true)
+puts ?\n * 2, "\u2B22 Italic", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', italic: true)
+puts ?\n * 2, "\u2B22 Strikethrough", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', strikethrough: true)
+puts ?\n * 2, "\u2B22 BG", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', bg: true)
+puts ?\n * 2, "\u2B22 Include Spaces | BG", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0', exclude_spaces: false, bg: false)
+puts ?\n * 2, "\u2B22 Include Spaces | No BG", story_with_newline.gradient('f55', '55f', '3eb', 'fa0', 'ff50a6', 'ff0')
