@@ -77,7 +77,7 @@ class String
 			style << '21;'.freeze if double_underline
 			style << '53;'.freeze if overline
 
-			style.delete_suffix!(?;.freeze)
+			style.chop!
 			style << ?m.freeze
 		end
 
