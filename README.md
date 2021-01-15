@@ -50,6 +50,25 @@ You can also pass any arbitrary colours for multilined string, and get the colou
 puts "Hello 🐵\nI am using string_dot_gradient!\nLove this gem!".gradient('f55', '55f', '3eb', 'f5f')
 ```
 
+Here's how the real method definition looks:
+
+```
+def gradient(*arg_colours,
+	exclude_spaces: true,
+	bg: false,
+	bold: false,
+	blink: false,
+	underline: false,
+	double_underline: false,
+	overline: false,
+	italic: false,
+	strikethrough: false
+	)
+```
+
+Do note that the strikethrough, overline, double_underline may not work on every terminal.
+The blink might not work on terminals that don't implement cursor blinking (integrated terminals in some IDE for example)
+
 #### Colours
 
 The gradient can be any hex colour. Sample colours can be:

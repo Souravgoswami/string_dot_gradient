@@ -46,9 +46,40 @@ class String
 	#
 	# The option blink makes the texts blink on supported terminals.
 	# Set blink to anything truthy or falsey, but better just go with true and false or nil
-	def gradient(*arg_colours, bg: false, exclude_spaces: true, bold: false, blink: false)
+	def gradient(*arg_colours,
+		exclude_spaces: true,
+		bg: false,
+		bold: false,
+		italic: false,
+		underline: false,
+		blink: false,
+		strikethrough: false,
+		double_underline: false,
+		overline: false
+		)
+
 		temp = ''
 		flatten_colours = arg_colours.flatten
+
+		# Create the styling here rather than creating it in the each_line loop
+		# We also make it a bit different, rather than using \e[1m\e[5m, we will do
+		# \e[1;5m to save the number of characters spit out by this method
+		style = nil
+
+		if bold || italic || underline || blink || strikethrough || double_underline || overline
+			style = "\e["
+
+			style << '1;'.freeze if bold
+			style << '3;'.freeze if italic
+			style << '4;'.freeze if underline
+			style << '5;'.freeze if blink
+			style << '9;'.freeze if strikethrough
+			style << '21;'.freeze if double_underline
+			style << '53;'.freeze if overline
+
+			style.delete_suffix!(?;.freeze)
+			style << ?m.freeze
+		end
 
 		raise ArgumentError, "Wrong numeber of colours (given #{flatten_colours.length}, expected minimum 2)" if flatten_colours.length < 2
 		raise ArgumentError, "Given argument for colour is neither a String nor an Integer" if flatten_colours.any? { |x| !(x.is_a?(String) || x.is_a?(Integer)) }
@@ -65,8 +96,7 @@ class String
 		init = bg ? 48 : 38
 
 		each_line do |c|
-			temp << "\e[1m".freeze if bold
-			temp << "\e[5m".freeze if blink
+			temp << style if style
 
 			_r, _g, _b = r, g, b
 			chomped = !!c.chomp!(''.freeze)
