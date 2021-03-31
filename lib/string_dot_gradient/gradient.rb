@@ -195,7 +195,10 @@ class String
 		overline: false
 		)
 
-		div = colours.length - 1
+		len = colours.length
+		raise ArgumentError, "Minimum two colours are required, given #{len}" if len < 2
+
+		div = len - 1
 		div_1 = div - 1
 		ret = ''
 
