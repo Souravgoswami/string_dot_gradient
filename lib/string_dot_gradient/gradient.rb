@@ -183,6 +183,69 @@ class String
 		block_given ? nil : temp
 	end
 
+	def multi_gradient(*colours,
+		exclude_spaces: true,
+		bg: false,
+		bold: false,
+		italic: false,
+		underline: false,
+		blink: false,
+		strikethrough: false,
+		double_underline: false,
+		overline: false
+		)
+
+		div = colours.length - 1
+		div_1 = div - 1
+		ret = ''
+
+		each_line { |l|
+			_len = l.length.fdiv(div)
+			len, c = _len.round, colours.dup
+			counter, j = -1, 0
+			ch = ''
+
+			l.each_char { |x|
+				counter += 1
+
+				if counter == len && j < div_1
+					counter, j = 0, j + 1
+					ret << ch.gradient(
+						c[0], c[1],
+						exclude_spaces: exclude_spaces,
+						bg: bg,
+						bold: bold,
+						italic: italic,
+						underline: underline,
+						blink: blink,
+						strikethrough: strikethrough,
+						double_underline: double_underline,
+						overline: overline
+					)
+
+					c.rotate!
+					ch.clear
+				end
+
+				ch << x
+			}
+
+			ret << ch.gradient(
+				c[0], c[1],
+				exclude_spaces: exclude_spaces,
+				bg: bg,
+				bold: bold,
+				italic: italic,
+				underline: underline,
+				blink: blink,
+				strikethrough: strikethrough,
+				double_underline: double_underline,
+				overline: overline)
+		}
+
+		ret
+	end
+
 	private
 	def hex_to_rgb(hex)
 		# Duplicate colour, even if colour is nil
