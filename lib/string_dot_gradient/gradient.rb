@@ -183,6 +183,17 @@ class String
 		block_given ? nil : temp
 	end
 
+	##
+	# = multi_gradient(*n_arg_colours, bg: false, exclude_spaces: true, bold: false, blink: false)    # => string or nil
+	#
+	# Accepts n number of colours. Example:
+	#    'Hello world this is multi_gradient()'.multi_gradient('3eb', '55f', 'f55', 'fa0')
+	#
+	# In this example, multi_gradient() paints the string with 4 colours in one line.
+	#
+	# It Splits up a string with the Calls String#gradient() with the given number of colours
+	# So each call to multi_gradient() involves many calls to String#gradient().
+	# Hence it's slower than String#gradient()
 	def multi_gradient(*colours,
 		exclude_spaces: true,
 		bg: false,
