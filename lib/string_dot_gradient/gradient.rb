@@ -271,8 +271,7 @@ class String
 				oor.include?(x) ? "\e[1;31m#{x}\e[0m" : x
 			}.join
 
-			puts "Hex Colour ##{invalids} is Out of Range"
-			raise ArgumentError
+			raise ArgumentError, "\e[0mHex Colour \e[1m##{invalids} is Out of Range\e[0m"
 		end
 
 		clen = colour.length
