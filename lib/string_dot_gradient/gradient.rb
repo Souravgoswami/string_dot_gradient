@@ -203,7 +203,8 @@ class String
 		blink: false,
 		strikethrough: false,
 		double_underline: false,
-		overline: false
+		overline: false,
+		&block
 		)
 
 		len = colours.length
@@ -212,6 +213,7 @@ class String
 		div = len - 1
 		div_1 = div - 1
 		ret = ''
+		block_given = block_given?
 
 		params = {
 			exclude_spaces: exclude_spaces,
@@ -222,7 +224,7 @@ class String
 			blink: blink,
 			strikethrough: strikethrough,
 			double_underline: double_underline,
-			overline: overline
+			overline: overline,
 		}
 
 		each_line { |l|
@@ -238,7 +240,11 @@ class String
 				# colour % len == 0 is very slow approach
 				if counter == len && j < div_1
 					counter, j = 0, j + 1
-					ret << ch.gradient(c[0], c[1], **params)
+					if block_given
+						ch.gradient(c[0], c[1], **params, &block)
+					else
+						ret << ch.gradient(c[0], c[1], **params)
+					end
 
 					c.rotate!
 					ch.clear
@@ -247,10 +253,14 @@ class String
 				ch << x
 			end
 
-			ret << ch.gradient(c[0], c[1], **params)
+			if block_given
+				ch.gradient(c[0], c[1], **params, &block)
+			else
+				ret << ch.gradient(c[0], c[1], **params)
+			end
 		}
 
-		ret
+		block_given ? nil : ret
 	end
 
 	private
