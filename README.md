@@ -25,7 +25,7 @@ $ gem install string_dot_gradient
 
 ## Usage
 
-With this gem installed, you can require 'string_dot_gradient' and run this on any string:
+### With this gem installed, you can require 'string_dot_gradient' and run this on any string:
 
 ```
 irb
@@ -44,13 +44,13 @@ irb(main):003:0> 'abcdefgh'.gradient('ff5', '55f')
 => "\e[38;2;223;223;116ma\e[38;2;191;191;148mb\e[38;2;159;159;180mc\e[38;2;127;127;212md\e[38;2;95;95;244me\e[38;2;63;63;255mf\e[38;2;31;31;255mg\e[38;2;0;0;255mh\e[0m"
 ```
 
-You can also pass any arbitrary colours for multilined string, and get the colours rotate smoothly:
+### You can also pass any arbitrary colours for multilined string, and get the colours rotate smoothly:
 
 ```
 puts "Hello 🐵\nI am using string_dot_gradient!\nLove this gem!".gradient('f55', '55f', '3eb', 'f5f')
 ```
 
-Here's how the real method definition looks:
+### Here's how the real method definition of gradient looks like:
 
 ```
 def gradient(*arg_colours,
@@ -69,7 +69,7 @@ def gradient(*arg_colours,
 Do note that the strikethrough, overline, double_underline may not work on every terminal.
 The blink might not work on terminals that don't implement cursor blinking (integrated terminals in some IDE for example)
 
-#### Colours
+### Colours
 
 The gradient can be any hex colour. Sample colours can be:
 
@@ -80,7 +80,21 @@ The gradient can be any hex colour. Sample colours can be:
 
 Any bad colour that's out of hex range, will raise ArgumentError.
 
-#### Passing Blocks
+### From version 0.3.0, there's also a method called `String#multi_gradient()`
+
+```
+'Hello world this is multi_gradient()'.multi_gradient('3eb', '55f', 'f55', 'fa0')
+"Hello world\nthis is multi_gradient()".multi_gradient('3eb', '55f', 'f55', 'fa0')
+```
+
+You can pass N number of colours to multigradient, and prints that in one line.
+multi_gradient() also accepts, bold, blink, underline, etc options that gradient() accepts.
+
+Do note that multiline colours will not get rotated like String#gradient(), but will be applied to each line instead.
+
+![Preview](https://github.com/Souravgoswami/string_dot_gradient/blob/master/images/multi_gradient.jpg)
+
+### Passing Blocks
 Sometimes it can be time-consuming for a very big string. Also, this could consume a lot of memory.
 Just take a look at the return value of "abcdefgh" above, you know it has a lot of extra characters!
 
@@ -105,7 +119,7 @@ irb(main):003:0> "Hello\nWorld".gradient('#f55', '#55f') { }
 As you can see, it returns nil, but the value of the string is yielded to the block variable instead.
 This makes it consume way lesser memory.
 
-## Animation
+### Animation
 You can animate your text using blocks!
 
 Here's an example:
@@ -134,7 +148,7 @@ EOF
 story_with_newline = story.chars.each { |x|
 	i += 1
 
-	# Check if the w-th character exceeds terminal size or not
+	# Check if the w-th character exceeds the terminal size or not
 	# If it exceeds the size, add a new line in the story
 
 	if i > w || i > w - 6 && x == ?\s.freeze
@@ -155,7 +169,7 @@ puts
 [ Story from: https://moralstories.top/read/the-cows-and-the-tiger ]
 
 ## Excluding Spaces and tabs
-A string can contain spaces or tabs, to exclude them, use the exclude_spaces optionl.
+A string can contain spaces or tabs, to exclude them, use the exclude_spaces optional.
 Set it to true or false. A truthy or falsey value will also work, but it's not recommended.
 
 + if exclude_spaces is set to true, it will not waste colours on spaces and tabs
