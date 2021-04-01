@@ -155,7 +155,7 @@ class String
 				ret = "\e[#{init};2;#{f_r};#{f_g};#{f_b}m#{_c}"
 
 				if block_given
-					if i == 0
+					if style && i == 0
 						yield style + ret
 					else
 						yield ret
@@ -172,7 +172,11 @@ class String
 			end
 
 			if block_given
-				yield style + ret
+				if style
+					yield style + ret
+				else
+					yield ret
+				end
 			else
 				temp << ret
 			end
