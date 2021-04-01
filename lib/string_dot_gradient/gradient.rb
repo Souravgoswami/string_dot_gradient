@@ -58,6 +58,7 @@ class String
 		overline: false
 		)
 
+		block_given = block_given?
 		temp = ''
 		flatten_colours = arg_colours.flatten
 
@@ -85,7 +86,8 @@ class String
 		raise ArgumentError, "Given argument for colour is neither a String nor an Integer" if flatten_colours.any? { |x| !(x.is_a?(String) || x.is_a?(Integer)) }
 
 		all_rgbs = flatten_colours.map!(&method(:hex_to_rgb))
-		block_given = block_given?
+
+		yield style if block_given
 
 		# r, g, b => starting r, g, b
 		# r2, g2, b2 => stopping r, g, b
@@ -155,11 +157,7 @@ class String
 				ret = "\e[#{init};2;#{f_r};#{f_g};#{f_b}m#{_c}"
 
 				if block_given
-					if style && i == 0
-						yield style + ret
-					else
-						yield ret
-					end
+					yield ret
 				else
 					temp << ret
 				end
@@ -172,11 +170,7 @@ class String
 			end
 
 			if block_given
-				if style
-					yield style + ret
-				else
-					yield ret
-				end
+				yield ret
 			else
 				temp << ret
 			end
