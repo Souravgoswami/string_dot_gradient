@@ -168,6 +168,10 @@ puts
 
 [ Story from: https://moralstories.top/read/the-cows-and-the-tiger ]
 
+You can also use multi_gradient() and pass blocks, to yield the characters
+to the block instead.
+
+
 ## Excluding Spaces and tabs
 A string can contain spaces or tabs, to exclude them, use the exclude_spaces optional.
 Set it to true or false. A truthy or falsey value will also work, but it's not recommended.
