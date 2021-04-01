@@ -202,48 +202,41 @@ class String
 		div_1 = div - 1
 		ret = ''
 
+		params = {
+			exclude_spaces: exclude_spaces,
+			bg: bg,
+			bold: bold,
+			italic: italic,
+			underline: underline,
+			blink: blink,
+			strikethrough: strikethrough,
+			double_underline: double_underline,
+			overline: overline
+		}
+
 		each_line { |l|
-			_len = l.length.fdiv(div)
-			len, c = _len.round, colours.dup
-			counter, j = -1, 0
+			_len = l.length
+
+			len, c = _len.fdiv(div).round, colours.dup
+			counter, i, j = -1, -1, 0
 			ch = ''
 
-			l.each_char { |x|
+			while x = l[i += 1] do
 				counter += 1
 
+				# colour % len == 0 is very slow approach
 				if counter == len && j < div_1
 					counter, j = 0, j + 1
-					ret << ch.gradient(
-						c[0], c[1],
-						exclude_spaces: exclude_spaces,
-						bg: bg,
-						bold: bold,
-						italic: italic,
-						underline: underline,
-						blink: blink,
-						strikethrough: strikethrough,
-						double_underline: double_underline,
-						overline: overline
-					)
+					ret << ch.gradient(c[0], c[1], **params)
 
 					c.rotate!
 					ch.clear
 				end
 
 				ch << x
-			}
+			end
 
-			ret << ch.gradient(
-				c[0], c[1],
-				exclude_spaces: exclude_spaces,
-				bg: bg,
-				bold: bold,
-				italic: italic,
-				underline: underline,
-				blink: blink,
-				strikethrough: strikethrough,
-				double_underline: double_underline,
-				overline: overline)
+			ret << ch.gradient(c[0], c[1], **params)
 		}
 
 		ret
