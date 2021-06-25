@@ -35,12 +35,19 @@ irb(main):001:0> require 'string_dot_gradient'
 irb(main):002:0> puts 'abcdefgh'.gradient('ff5', '55f')
 abcdefgh
 => nil
+
+irb(main):003:0> puts 'abcdefgh'.gradient(0xffff55, 0x5555ff)
+abcdefgh
+=> nil
 ```
 
 This actually generates ANSI sequences to create gradient colours:
 
 ```
-irb(main):003:0> 'abcdefgh'.gradient('ff5', '55f')
+irb(main):004:0> 'abcdefgh'.gradient('ff5', '55f')
+=> "\e[38;2;223;223;116ma\e[38;2;191;191;148mb\e[38;2;159;159;180mc\e[38;2;127;127;212md\e[38;2;95;95;244me\e[38;2;63;63;255mf\e[38;2;31;31;255mg\e[38;2;0;0;255mh\e[0m"
+
+irb(main):005:0> 'abcdefgh'.gradient(0xff5555, 0x5555ff)
 => "\e[38;2;223;223;116ma\e[38;2;191;191;148mb\e[38;2;159;159;180mc\e[38;2;127;127;212md\e[38;2;95;95;244me\e[38;2;63;63;255mf\e[38;2;31;31;255mg\e[38;2;0;0;255mh\e[0m"
 ```
 
@@ -71,20 +78,45 @@ The blink might not work on terminals that don't implement cursor blinking (inte
 
 ### Colours
 
-The gradient can be any hex colour. Sample colours can be:
+##### The gradient can be any hex colour. Sample colours can be:
 
 1. #f55
 2. #ff5555
 3. f55
 4. ff5555
+5. 0xff5555
 
-Any bad colour that's out of hex range, will raise ArgumentError.
+##### Integer Colours:
+When an integer colour is passed, the conversion will be faster than a string parsing.
+
++ For example: 0xffffff for white,
++ 0x000000 or 0x0 for black, 0x00aa00 for deep green
++ 0xff50a6 for pink, 0xff5555 for light red, etc.
+
+Similarly you can use Integers directly (not recommended though):
++ (255 * 256 * 256) + (255 * 256) + (255) => 0xffffff
++ (0 * 256 * 256) + (0 * 256) + 0 => 0x0
++ (255 * 256 * 256) + (85 * 256) + 85 => #ff5555
++ (85 * 256 * 256) + (85 * 256) + 255 => #5555ff
++ (255 * 256 * 256) + (170 * 256) + 0 => 0xffaa00
++ (0 * 256 * 256) + (170 * 256) + 0 => 0x00aa00
+
+##### Bad Colours:
++ Using any bad Integer can do the following:
+  + 0x00aa00aa00aa (any big Integer) will be aa00aa, clamping to last 6 hex digits.
+  + 0x0a0 (hex < 6 digit) will be 0000a0, shifting the value to right.
+  + Negative Integer will cause unexpected output, but won't cause any major crash.
++ Any bad String colour that's out of hex range, will raise ArgumentError.
 
 ### From version 0.3.0, there's also a method called `String#multi_gradient()`
 
 ```
 'Hello world this is multi_gradient()'.multi_gradient('3eb', '55f', 'f55', 'fa0')
 "Hello world\nthis is multi_gradient()".multi_gradient('3eb', '55f', 'f55', 'fa0')
+
+# Or #
+'Hello world this is multi_gradient()'.multi_gradient(0x33eebb, 0x5555ff, 0xff5555, 0xffaa00)
+'Hello world\nthis is multi_gradient()'.multi_gradient(0x33eebb, 0x5555ff, 0xff5555, 0xffaa00)
 ```
 
 You can pass N number of colours to multigradient, and prints that in one line.
