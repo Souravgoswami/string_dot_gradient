@@ -58,6 +58,8 @@ class String
 		overline: false
 		)
 
+		space, tab = ?\s.freeze, ?\t.freeze
+
 		block_given = block_given?
 		temp = ''
 		flatten_colours = arg_colours.flatten
@@ -109,6 +111,11 @@ class String
 			n_variable = 1 if n_variable < 1
 
 			# colour operator, colour value
+			#
+			# r_op, g_op, b_op are also flags to determine
+			# if the r, g, and b values respectively should change or not
+			# For example, if the given blues are equal, the b_op is nil
+			# So it won't change the colour in the ouput
 			r_op = r_val  = nil
 			g_op = g_val = nil
 			b_op = b_val = nil
@@ -140,7 +147,7 @@ class String
 			while (i += 1) < len
 				_c = c[i]
 
-				if !exclude_spaces || (exclude_spaces && !(_c == ?\s.freeze || _c == ?\t.freeze))
+				if !exclude_spaces || (_c != space && _c != tab)
 					_r = _r.send(r_op, r_val) if r_op
 					_g = _g.send(g_op, g_val) if g_op
 					_b = _b.send(b_op, b_val) if b_op
@@ -150,11 +157,11 @@ class String
 				g_to_i = _g.to_i
 				b_to_i = _b.to_i
 
-				f_r = r_to_i < 0 ? 0 : r_to_i > 255 ? 255 : r_to_i
-				f_g = g_to_i < 0 ? 0 : g_to_i > 255 ? 255 : g_to_i
-				f_b = b_to_i < 0 ? 0 : b_to_i > 255 ? 255 : b_to_i
+				clamped_r = r_to_i < 0 ? 0 : r_to_i > 255 ? 255 : r_to_i
+				clamped_g = g_to_i < 0 ? 0 : g_to_i > 255 ? 255 : g_to_i
+				clamped_b = b_to_i < 0 ? 0 : b_to_i > 255 ? 255 : b_to_i
 
-				ret = "\e[#{init};2;#{f_r};#{f_g};#{f_b}m#{_c}"
+				ret = "\e[#{init};2;#{clamped_r};#{clamped_g};#{clamped_b}m#{_c}"
 
 				if block_given
 					yield ret
@@ -263,37 +270,5 @@ class String
 		}
 
 		block_given ? nil : ret
-	end
-
-	private
-	def hex_to_rgb(hex)
-		# Duplicate colour, even if colour is nil
-		# This workaround is for Ruby 2.0 to Ruby 2.2
-		# Which won't allow duplicate nil.
-		colour = hex && hex.dup.to_s || ''
-		colour.strip!
-		colour.downcase!
-		colour[0] = ''.freeze if colour[0] == ?#.freeze
-
-		# out of range
-		oor = colour.scan(/[^a-f0-9]/)
-
-		unless oor.empty?
-			invalids = colour.chars.map { |x|
-				oor.include?(x) ? "\e[1;31m#{x}\e[0m" : x
-			}.join
-
-			raise ArgumentError, "\e[0mHex Colour \e[1m##{invalids} is Out of Range\e[0m"
-		end
-
-		clen = colour.length
-		if clen == 3
-			colour.chars.map { |x| x.<<(x).to_i(16) }
-		elsif clen == 6
-			colour.chars.each_slice(2).map { |x| x.join.to_i(16) }
-		else
-			sli = clen > 6 ? 'too long'.freeze : clen < 3 ? 'too short'.freeze : 'invalid'.freeze
-			raise ArgumentError, "Invalid Hex Colour ##{colour} (length #{sli})"
-		end
 	end
 end
