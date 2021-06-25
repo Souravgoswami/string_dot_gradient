@@ -139,7 +139,7 @@ $ irb
 irb(main):001:0> require 'string_dot_gradient'
 => true
 
-irb(main):002:0> "Hello\nWorld".gradient('#f55', '#55f') { |x| print x }
+irb(main):002:0> "Hello\nWorld".gradient(0xff5555, 0x5555ff) { |x| print x }
 Hello
 World=> nil
 
