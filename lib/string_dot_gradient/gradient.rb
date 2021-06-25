@@ -89,7 +89,7 @@ class String
 
 		all_rgbs = flatten_colours.map!(&method(:hex_to_rgb))
 
-		yield style if block_given
+		yield style if block_given && style
 
 		# r, g, b => starting r, g, b
 		# r2, g2, b2 => stopping r, g, b
